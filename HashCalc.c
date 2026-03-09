@@ -376,7 +376,7 @@ BOOL WINAPI HashCalcWriteResult( PHASHCALCCONTEXT phcctx, PHASHCALCITEM pItem )
 {
 	PCTSTR pszHash;
 	PVOID pvLine;
-	INT cchLine, cbLine;  // Length of line, in TCHARs or BYTEs, EXCLUDING the terminator
+	INT cchLine, cbLine, i;  // Length of line, in TCHARs or BYTEs, EXCLUDING the terminator
 
 	if (!pItem->bValid)
 		return(FALSE);
@@ -410,6 +410,13 @@ BOOL WINAPI HashCalcWriteResult( PHASHCALCCONTEXT phcctx, PHASHCALCITEM pItem )
 		case 4: pszHash = pItem->results.szHexSHA1;  break;
 		case 5: pszHash = pItem->results.szHexSHA256;break;
 		default: return(FALSE);
+	}
+
+	// Replace backslashes
+	for (i = 0; pItem->szPath[i]; i++)
+	{
+		if (pItem->szPath[i] == TEXT('\\'))
+			pItem->szPath[i] = TEXT('/');
 	}
 
 	// Format the line
